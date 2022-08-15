@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/reuse/item.dart';
-import 'package:todo_app/shared/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/shared/states.dart';
+
+import '../reuse/item.dart';
+import '../shared/cubit.dart';
+import '../shared/states.dart';
 
 class Done_tasks extends StatefulWidget {
   const Done_tasks({Key? key}) : super(key: key);

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/reuse/item.dart';
-import 'package:intl/intl.dart';
 import 'package:conditional_builder_rec/conditional_builder_rec.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/shared/cubit.dart';
-import 'package:todo_app/shared/states.dart';
+import 'package:intl/intl.dart';
+
+import '../reuse/item.dart';
+import '../shared/cubit.dart';
+import '../shared/states.dart';
 
 class AppLayout extends StatelessWidget {
   var titleController = TextEditingController();
   var dateController = TextEditingController();
   var timeController = TextEditingController();
-  var ScaffoldKey = GlobalKey<ScaffoldState>();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -25,7 +26,7 @@ class AppLayout extends StatelessWidget {
         },
         builder: (BuildContext context, AppStates state) {
           return Scaffold(
-            key: ScaffoldKey,
+            key: scaffoldKey,
             appBar: AppBar(
               centerTitle: true,
               title: Text(AppCubit.get(context)
@@ -36,7 +37,7 @@ class AppLayout extends StatelessWidget {
               builder: (context) => AppCubit.get(context)
                   .screens[AppCubit.get(context).currentIndex],
               fallback: (context) => Center(
-                child: CircularProgressIndicator(),
+                child: const CircularProgressIndicator(),
               ),
             ),
             floatingActionButton: FloatingActionButton(
@@ -49,7 +50,7 @@ class AppLayout extends StatelessWidget {
                         date: dateController.text);
                   }
                 } else {
-                  ScaffoldKey.currentState!
+                  scaffoldKey.currentState!
                       .showBottomSheet(
                         (context) => Container(
                           padding: EdgeInsets.all(20.0),
@@ -70,7 +71,7 @@ class AppLayout extends StatelessWidget {
                                     }
                                   },
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 15.0,
                                 ),
                                 text(
@@ -92,7 +93,7 @@ class AppLayout extends StatelessWidget {
                                             value!.format(context).toString();
                                       });
                                     }),
-                                SizedBox(
+                                const SizedBox(
                                   height: 15.0,
                                 ),
                                 text(
@@ -107,16 +108,12 @@ class AppLayout extends StatelessWidget {
                                     },
                                     onTap: () {
                                       showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime(2022),
-                                      ).then((value) {
-                                        dateController.text =
-                                            DateFormat.yMMMd().format(value!);
-                                      }).catchError((error) {
-                                        print(error.toString());
-                                      });
+                                          context: context,
+                                          initialDate: DateTime(1995, 1),
+                                          firstDate: DateTime(1995, 1),
+                                          lastDate: DateTime(2020, 12))
+                                          .then((value) => dateController.text =
+                                          DateFormat.yMMMd().format(value!));
                                     }),
                               ],
                             ),

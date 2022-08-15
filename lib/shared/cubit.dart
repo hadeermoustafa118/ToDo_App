@@ -3,11 +3,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/modules/Archived_tasks.dart';
-import 'package:todo_app/modules/done_tasks.dart';
-import 'package:todo_app/modules/new_tasks.dart';
-import 'package:todo_app/shared/states.dart';
+import 'package:projectes_work/shared/states.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../modules/Archived_tasks.dart';
+import '../modules/done_tasks.dart';
+import '../modules/new_tasks.dart';
+
 
 
 class AppCubit extends Cubit<AppStates> {
@@ -24,9 +26,9 @@ class AppCubit extends Cubit<AppStates> {
     'Archived Tasks',
   ];
   List<Widget> screens = [
-    New_tasks(),
-    Done_tasks(),
-    Archived_tasks(),
+    const New_tasks(),
+   const  Done_tasks(),
+     Archived_tasks(),
   ];
   late Database database;
   int currentIndex = 0;
@@ -51,17 +53,13 @@ class AppCubit extends Cubit<AppStates> {
   void createDatabase() {
     openDatabase('todo.db', version: 1,
         onCreate: (database, version) {
-          print('database created');
           database.execute(
               'CREATE TABLE tasks ( id INTEGER PRIMARY KEY , title TEXT  , time TEXT , date TEXT, status TEXT)')
               .then((value) {
-            print('table created');
           }).catchError((error) {
-            print('Error happend : ${error.toString()}');
           });
         }, onOpen: (database) {
           getDataFromDB(database);
-          print('database opened');
         }).then((value) {
       database = value;
       emit(AppCreateDatabaseState());
@@ -78,11 +76,9 @@ class AppCubit extends Cubit<AppStates> {
           .rawInsert(
           'INSERT INTO tasks (title , time, date, status) VALUES ("$title","$time","$date","New")')
           .then((value) {
-        print('raw is inserted of $value');
         getDataFromDB(database);
         emit(AppInsertDatabaseState());
       }).catchError((error) {
-        print(' ${error.toString()} happened');
       });
     });
   }

@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
-import 'package:todo_app/shared/cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:conditional_builder_rec/conditional_builder_rec.dart';
+
+import '../shared/cubit.dart';
 
 Widget text({
   required TextEditingController controller,
@@ -12,7 +11,7 @@ Widget text({
   VoidCallback? onTap,
   required String label,
   required IconData prefix,
-  bool ispassword = false,
+  bool isPassword = false,
   IconData? suffix,
   bool isClickable = true,
 }) =>
@@ -22,36 +21,31 @@ Widget text({
       validator: validate,
       onTap: onTap,
       enabled: isClickable,
-      obscureText: ispassword,
+      obscureText: isPassword,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(prefix),
         suffixIcon: suffix != null
             ? IconButton(
-          icon: Icon(suffix),
-          onPressed: suffixPressed,
-        )
+                icon: Icon(suffix),
+                onPressed: suffixPressed,
+              )
             : null,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
 
-Widget buildItem(
-    Map model, context
-    ) =>
-    Dismissible(
+Widget buildItem(Map model, context) => Dismissible(
       key: Key(model['id'].toString()),
-
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Row(
           children: [
             CircleAvatar(
               radius: 35.0,
-//backgroundColor: Colors.blue,
               child: Text('${model['time']}'),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20.0,
             ),
             Expanded(
@@ -61,19 +55,20 @@ Widget buildItem(
                 children: [
                   Text(
                     '${model['title']}',
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    style:
+                        const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8.0,
                   ),
                   Text(
                     '${model['date']}',
-                    style: TextStyle(color: Colors.grey),
+                    style:const  TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20.0,
             ),
             IconButton(
@@ -82,44 +77,52 @@ Widget buildItem(
                       .updateData(status: 'Done', id: model['id']);
                 },
                 color: Colors.amber,
-                icon: Icon(Icons.check_box)),
+                icon: const Icon(Icons.check_box)),
             IconButton(
                 onPressed: () {
                   AppCubit.get(context)
                       .updateData(status: 'Archived', id: model['id']);
                 },
                 color: Colors.black45,
-                icon: Icon(Icons.archive)),
+                icon: const Icon(Icons.archive)),
           ],
         ),
       ),
-      onDismissed: (direction){
+      onDismissed: (direction) {
         AppCubit.get(context).deleteData(id: model['id']);
       },
     );
 
-Widget tasksBuilder ({
-  required List<Map> tasks
-})=>
-  ConditionalBuilderRec(
-      condition:tasks.length >0 ,
-      builder: (context)=> ListView.separated(
-          itemBuilder:(context, index) => buildItem(tasks[index], context),
+Widget tasksBuilder({required List<Map> tasks}) => ConditionalBuilderRec(
+      condition: tasks.isNotEmpty,
+      builder: (context) => ListView.separated(
+          itemBuilder: (context, index) => buildItem(tasks[index], context),
           separatorBuilder: (context, index) => Container(
-            width: double.infinity,
-            height: 1.0,
-            color: Colors.grey[300],
-          ),
+                width: double.infinity,
+                height: 1.0,
+                color: Colors.grey[300],
+              ),
           itemCount: tasks.length),
-      fallback: (context)=> Center(
+      fallback: (context) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.menu , size: 50.0,color: Colors.grey,),
-            SizedBox(height: 10.0,),
-            Text('No Tasks Yet, add some to do them!' , style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black45),),
+          children: const [
+            Icon(
+              Icons.menu,
+              size: 50.0,
+              color: Colors.grey,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              'No Tasks Yet, add some to do them!',
+              style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45),
+            ),
           ],
         ),
       ),
-
-  );
+    );
